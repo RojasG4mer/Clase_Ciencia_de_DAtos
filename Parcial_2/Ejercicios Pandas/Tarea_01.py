@@ -11,7 +11,7 @@ import numpy as np
 
 ## Leemos el archivo:
 df = pd.read_csv('GCB2022v27_percapita_flat.csv')
-## Explorar el dataset:
+## -------Explorar el dataset:----------------------------------------------
 # Explorar nombres de columnas
 columnas = df.columns
 # Tipo de datos de las columnas
@@ -104,30 +104,39 @@ for i in range(1, len(G_20_paises)):
     maximos += aux
     Datos_g20 = pd.concat([Datos_g20, df[df[columnas[0]] == G_20_paises[i]]])
 Datos_g20.drop_duplicates(inplace=True) #Elimnamos filas duplicadas
-# Paises que contaminan más de cada columna
-
-
+# Paises que contaminan más de cada columna-----------------------------------
 maxis = []
+nums = []
 for j in range(0, 7):
     aux = []
     for i in range(j, 167, 7):
         aux.append([Datos_g20.loc[maximos[i][0], maximos[i][1]], maximos[i]])
     aux = sorted(aux, key=lambda x: x[0], reverse=True)
     maxis.append([aux[0], aux[1], aux[2]])
+aux = []   
+for i in range(0, 7):
+    for j in range(0, 3):
+        nums.append([maxis[i][j][0]])
+        aux.append(Datos_g20.loc[maxis[i][j][1][0], 'Country'])
+## maxis es la lista donde están los pasises que contaminaron más de cada columna
 
-print(maxis)
 ## Crear un dataframe donde estén colocados los máximos con su país correspondiente y valor de la columna
+indices = np.reshape(['Primero', 'Segundo', 'Tercero'], (3, 1))
 
+nums = np.reshape(nums, (7,3)).T
+aux = np.reshape(aux, (7, 3)).T
+Diccionario = {'Indices' : ['Primero', 'Segundo', 'Tercero']}
+maxis = []
+for i in range(0, 7):
+    maxis = []
+    for j in range(0, 3):
+        maxis.append([nums[j][i], aux[j][i]])
+    for k in range(0, 3):
+        Diccionario[columna_req[i]] = maxis
+     
+maximos_df = pd.DataFrame(Diccionario) 
+maximos_df = maximos_df.set_index('Indices') ## DF que tiene países que más contaminan
 
-Datos_g20.loc[maximos[2][0], maximos[2][1]]
-df.loc[21445, 'Total']
-# Unir los DataFrames
-# df_union = pd.concat([Datos_g20, df[df[columnas[0]] == G_20_paises[1]]])
-
-# Eliminar NaNs.
-
-# Aplicar merge, groupby
-
-
-
+#xdddd = Datos_g20[columnas[2] == Datos_g20[G_20_paises[0]]]
+xddd = Datos_g20.loc[Datos_g20['Country'] == G_20_paises[0], columnas[3]]
 

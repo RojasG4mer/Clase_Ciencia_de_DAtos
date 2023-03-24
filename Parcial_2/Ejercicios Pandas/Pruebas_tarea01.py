@@ -169,9 +169,6 @@ ax.legend()
 
 # Eliminar NaNs.
 
-
-
-
 # Aplicar merge, groupby
 
 
